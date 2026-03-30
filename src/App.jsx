@@ -68,7 +68,13 @@ function App() {
     nivel: 0,
   }));
 
-  const [lista, setLista] = useState(novaLista);
+  const [lista, setLista] = useState(()=>{
+    const dadosSalvo = localStorage.getItem("herois");
+    if(dadosSalvo){
+      return JSON.parse(dadosSalvo);
+    }
+    return novaLista;
+  });
 
   
 
