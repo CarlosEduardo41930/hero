@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "./components/Card";
 import Texte from "./components/Texte";
 // import Login from "./components/Login";
@@ -68,6 +68,8 @@ function App() {
     nivel: 0,
   }));
 
+  
+
   const [lista, setLista] = useState(()=>{
     const dadosSalvo = localStorage.getItem("herois");
     if(dadosSalvo){
@@ -75,6 +77,25 @@ function App() {
     }
     return novaLista;
   });
+  
+  const adicionarHeroi = (dados) => {
+    setLista((antiga)=>[
+      ...antiga,
+      {
+        ...dados,
+        id: (lista.length + 1),
+        imagem: '',
+        status: 'online',
+        aparecer: true,
+        nivel: 0,
+        xp: 0
+      }
+    ])
+  }
+  useEffect(() =>{
+   localStorage.setItem("herois", JSON.stringify(lista));
+    document.title = `Heróis Recrutados: ${lista.length}`
+  }, [lista])
 
   
 
@@ -131,9 +152,7 @@ function App() {
 
   return (
     <>
-      {/* <div style={containerStyle}>
-          {lista.filter((heroi)=>{return heroi.aparecer === true}).map((heroi)=>{return <Card  key={heroi.id} heroi={heroi} exibir={()=> exibir(heroi.id)}/>})}
-        </div> */}
+      
 
       <div style={{ textAlign: "center" }}>
         <button
@@ -226,7 +245,7 @@ function App() {
           </div>
         </div>
       </div>
-      <Formulario />
+      <Formulario adicionar = {adicionarHeroi} />
 
       {/* <Cadastro /> */}
     </>

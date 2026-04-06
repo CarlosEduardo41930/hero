@@ -6,7 +6,7 @@ const schema = z.object({
   classe: z.string().min(4, "classe muito curto"),
 })
 
-function Formulario(){
+function Formulario({adicionar}){
     const [dados, setDados] = useState ({
         nome: '',
         classe: ''
@@ -18,6 +18,7 @@ function Formulario(){
     setDados({
       ...dados,[e.target.name]: e.target.value
     })
+    return dados
   }
 
     
@@ -29,7 +30,9 @@ function Formulario(){
       setErros(result.error.format());
     } else {
       setErros({})
-      alert("Formulário enviado com sucesso!")
+      adicionar(dados);
+      alert("Um novo herói foi validado e salvo!")
+      // alert("Formulário enviado com sucesso!")
     }
   }
     return(<>
