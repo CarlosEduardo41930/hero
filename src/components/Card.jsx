@@ -39,4 +39,3 @@ const subirDeNivel = heroi.xp === 0 && heroi.nivel > 0;
 }
 export default Card;
 
-
