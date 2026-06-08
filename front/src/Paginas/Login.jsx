@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: (dados) => {
             return axios.post('http://localhost:418/login', dados);
         }, onSuccess: (dado) => {
             console.log('Login bem-sucedido:', dado.data);
+            //navigate('/home');
             localStorage.setItem('token', dado.data.token);
         }
     })
