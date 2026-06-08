@@ -15,11 +15,11 @@ function Cadastro() {
 
     const validacaoCadastro = z.object({
         email: z.string().email(),
-        password: z.string().min(6),
+        senha: z.string().min(6),
         confirmPassword: z.string(),
         nome_completo: z.string().min(2, "O nome completo deve ter pelo menos 2 caracteres").max(100, "O nome completo deve ter no máximo 100 caracteres"),
         nome_usuario: z.string().min(2, "O nome de usuário deve ter pelo menos 2 caracteres").max(50, "O nome de usuário deve ter no máximo 50 caracteres")
-    }).refine((data) => data.password === data.confirmPassword, {
+    }).refine((data) => data.senha === data.confirmPassword, {
         message: "As senhas não coincidem",
         path: ["confirmPassword"],
     });
@@ -30,9 +30,10 @@ function Cadastro() {
         }, onSuccess: (dado) => {
             console.log('Cadastro bem-sucedido:', dado.data);
             navigate('/login');
-            localStorage.setItem('token', dado.data.token);
+            console.log('Token armazenado:', dado.data);
         }, onError: (error) => {
             const data = error.response?.data;
+            console.log('Erro no cadastro:', data);
             const mensagens = [
                 data?.message,
                 ...(data?.errors?.map(err => err.message) || [])
@@ -44,15 +45,20 @@ function Cadastro() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setErro([]);
-        const dadosValidos = validacaoCadastro.safeParse({ nome_completo, nome_usuario, email, password, confirmPassword });
+        const dadosValidos = validacaoCadastro.safeParse({ nome_completo, nome_usuario, email, senha: password, confirmPassword });
         if (dadosValidos.success) {
             mutation.mutate(dadosValidos.data);
         } else {
             console.error('Dados de cadastro inválidos:', dadosValidos.error.flatten());
             setErro((antes) => [
                 ...antes,
-                ...(dadosValidos.error.flatten().fieldErrors.confirmPassword || [])
+                ...(dadosValidos.error.flatten().fieldErrors.confirmPassword || []),
+                ...(dadosValidos.error.flatten().fieldErrors.email || []),
+                ...(dadosValidos.error.flatten().fieldErrors.senha || []),
+                ...(dadosValidos.error.flatten().fieldErrors.nome_completo || []),
+                ...(dadosValidos.error.flatten().fieldErrors.nome_usuario || [])
             ]);
+            console.log(dadosValidos.error.flatten().fieldErrors.confirmPassword);
         }
     }
 

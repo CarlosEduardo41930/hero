@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path='/cadastro' element={<Cadastro />} />
         {/* <Route path='/cadastro' element={<h1>Cadastro</h1>} /> */}
-        <Route path='/' element={<Login />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </QueryClientProvider>
   )
