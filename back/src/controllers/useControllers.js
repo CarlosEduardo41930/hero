@@ -33,7 +33,7 @@ exports.verificaToken = (req, res, next) => {
 exports.login = async (req, res) => {
   const { email, senha } = req.body;
   try {
-    const [rows] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+    const [rows] = await db.query('SELECT * FROM usuario WHERE email = ?', [email]);
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Usuário não encontrado!' });
     }
@@ -63,7 +63,7 @@ exports.cadastro = async (req, res) => {
   }
   const senhaHash = await bcrypt.hash(senha, 10);
 
-  await db.query('INSERT INTO usuarios (email, senha, nome_completo, nome_usuario) VALUES (?, ?, ?, ?)', [email, senhaHash, nome_completo, nome_usuario]);
+  await db.query('INSERT INTO usuario (email, senha, nome, nome_usuario) VALUES (?, ?, ?, ?)', [email, senhaHash, nome_completo, nome_usuario]);
   return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
   } catch (error) {
     console.error('Erro ao validar cadastro:', error);

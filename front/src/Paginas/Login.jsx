@@ -1,0 +1,65 @@
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from 'axios';
+
+function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const mutation = useMutation({
+        mutationFn: (dados) => {
+            return axios.post('http://localhost:418/login', dados);
+        }, onSuccess: (dado) => {
+            console.log('Login bem-sucedido:', dado.data);
+            localStorage.setItem('token', dado.data.token);
+        }
+    })
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        mutation.mutate({ email, senha: password });
+    }
+
+    return (
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-purple-900">
+            <form onSubmit={handleSubmit} className="w-full max-w-md rounded-xl bg-white/10 p-8 backdrop-blur-md">
+                <h2 className="mb-6 text-center text-3xl font-bold text-white">Login</h2>
+                <div className="mb-4">
+                    <label className="mb-2 block text-sm font-medium text-white">Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full rounded-lg border border-white/20 bg-white/20 px-4 py-2 text-white placeholder-white/60 focus:border-purple-400 focus:outline-none"
+                        placeholder="seu@email.com"
+                        required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="mb-2 block text-sm font-medium text-white">Senha:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full rounded-lg border border-white/20 bg-white/20 px-4 py-2 text-white placeholder-white/60 focus:border-purple-400 focus:outline-none"
+                        placeholder="••••••••"
+                        required
+                    />
+                </div>
+                <button 
+                    type="submit" 
+                    disabled={mutation.isPending}
+                    className="w-full rounded-lg bg-purple-600 py-2 font-semibold text-white transition hover:bg-purple-700 disabled:opacity-50"
+                >
+                    {mutation.isPending ? 'Entrando...' : 'Login'}
+                </button>
+                {mutation.error && (
+                    <p className="mt-4 text-center text-red-400 text-sm">
+                        Erro no login: {mutation.error?.response?.data?.message || 'Tente novamente'}
+                    </p>
+                )}
+            </form>
+        </div>
+    );
+}
+
+export default Login
