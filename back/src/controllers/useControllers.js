@@ -16,7 +16,7 @@ const validacaoCadastro = z.object({
 
 
 exports.verificaToken = (req, res, next) => {
-  const token = req.headers['Authorization']?.split(' ')[1]; // Padrão Bearer TOKEN
+  const token = req.headers['authorization']?.split(' ')[1]; // Padrão Bearer TOKEN
   console.log(token)
 
   if(!token) return res.status(403).json({ message: 'Nenhum token fornecido!'});
@@ -25,7 +25,7 @@ exports.verificaToken = (req, res, next) => {
     if (err) return res.status(401).json({ message: "Token inválido ou expirado!"});
 
     // Salvar o ID do usuário na requisição
-    req.userId = decoded.user.id;
+    req.userId = decoded.id;
     next(); 
   })
 };
@@ -71,6 +71,18 @@ exports.cadastro = async (req, res) => {
   }
 }
 
+exports.herois = async (req, res) => {
+  try{
+        const [rows] = await db.query("SELECT * FROM heroi WHERE fk_usuario = ?", [req.userId]);
+        res.json(rows);
+    }catch (error) {
+        res.status(500).json({erro: error.message});
+    }
+}
+
+// exports.novoHeroi = async (req, res) => {
+//   const { nome, guilda_id, classe, imagem, nivel, status, descricao } = req.body;
+//   try {}
 
 
 module.exports = exports;

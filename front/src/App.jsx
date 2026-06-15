@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 import Login from './Paginas/Login'
 import Cadastro from './Paginas/Cadastro'
 import Layout from './Paginas/Layout'
+import AcessoNegado from './Paginas/AcessoNegado'
 import { Navigate } from 'react-router-dom'
 
 const queryClient = new QueryClient()
@@ -14,10 +15,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
-        <Route path='/' element={<Layout />} />
+        <Route path='/teste' element={<Layout />} />
         <Route path='/cadastro' element={<Cadastro />} />
-        {/* <Route path='/cadastro' element={<h1>Cadastro</h1>} /> */}
         <Route path='/login' element={<Login />} />
+        <Route path='/acesso-negado' element={<AcessoNegado />} />
       </Routes>
     </QueryClientProvider>
   )

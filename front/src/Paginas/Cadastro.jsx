@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import { z } from 'zod';
 
@@ -137,6 +137,9 @@ function Cadastro() {
                         ))}
                     </ul>
                 )}
+                <p className="text-center text-sm text-white pt-4">
+                    Já é cadastrado? <Link to="/login" className="text-purple-400 hover:text-purple-300">Faça login aqui</Link>
+                </p>
             </form>
         </div>
     );

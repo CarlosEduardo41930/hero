@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 
 function Login() {
@@ -12,9 +12,8 @@ function Login() {
         mutationFn: (dados) => {
             return axios.post('http://localhost:418/login', dados);
         }, onSuccess: (dado) => {
-            console.log('Login bem-sucedido:', dado.data);
-            //navigate('/home');
             localStorage.setItem('token', dado.data.token);
+            navigate('/teste');
         }
     })
     const handleSubmit = (e) => {
@@ -60,6 +59,9 @@ function Login() {
                         Erro no login: {mutation.error?.response?.data?.message || 'Tente novamente'}
                     </p>
                 )}
+                <p className="text-center text-sm text-white pt-4">
+                    Não é cadastrado? <Link to="/cadastro" className="text-purple-400 hover:text-purple-300">Crie uma conta aqui</Link>
+                </p>
             </form>
         </div>
     );

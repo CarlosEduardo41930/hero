@@ -1,68 +1,51 @@
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import Cards from "./Cards";
 
 function Home() {
-const listaHerois = [
-    {
-      id: 1,
-      nome: "Arthemis",
-      classe: "Arqueira",
-      imagem: arqueira,
-      status: "online",
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  
+  useEffect(() => {
+    if (!token) {
+      navigate('/acesso-negado');
+    }
+  }, [token, navigate]);
+  
+  const {data, isLoading, error} = useQuery({
+    queryKey: ['herois'],
+    queryFn: async () => {
+        const res = await axios.get('http://localhost:418/herois', {
+            headers: { authorization: `Bearer ${token}` }
+        });
+        return res.data;
     },
-    {
-      id: 2,
-      nome: "Grog",
-      classe: "Guerreiro",
-      imagem: guerreiro,
-      status: "ausente",
-    },
-    {
-      id: 3,
-      nome: "Elora",
-      classe: "Maga",
-      imagem: mage,
-      status: "offline",
-    },
-    {
-      id: 4,
-      nome: "Arthemis",
-      classe: "Arqueira",
-      imagem: arqueira,
-      status: "online",
-    },
-    {
-      id: 5,
-      nome: "Grog",
-      classe: "Guerreiro",
-      imagem: guerreiro,
-      status: "ausente",
-    },
-    {
-      id: 6,
-      nome: "Elora",
-      classe: "Maga",
-      imagem: mage,
-      status: "offline",
-    },
-  ];
+    enabled: !!token
+  });
+
+  if (isLoading) return <div className="p-8">Carregando...</div>;
+  
+  if (error) {
+    if (error.response?.status === 403 || error.response?.status === 401) {
+      localStorage.removeItem('token');
+      navigate('/acesso-negado');
+      return null;
+    }
+    return <div className="p-8 text-red-500">Erro ao carregar heróis: {error.message}</div>;
+  }
 
     return (
         <div className="flex flex-col justify-items-center">
             <div className="flex justify-evenly">
-                <div className="">
-                    <p>Total de Heróis Recrutados</p>
-                </div>
-                <div className="">
-                    <p>Média de Poder da Equipe</p>
-                </div>
-                <div className="">
-                    <p>Guilda Mais Forte</p>
-                </div>
-
+                <div className=""><p>Total de Heróis Recrutados</p></div>
+                <div className=""><p>Média de Poder da Equipe</p></div>
+                <div className=""><p>Guilda Mais Forte</p></div>
             </div>
             <div className="flex justify-around pt-5">
-                {listaHerois.map((heroi) => (
-                    <Cards key={heroi.id} heroi={heroi} />
+                {data?.map((heroi) => (
+                    <Cards key={heroi.id_heroi} heroi={heroi} />
                 ))}
             </div>
         </div>
