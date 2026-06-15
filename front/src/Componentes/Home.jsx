@@ -25,7 +25,12 @@ function Home() {
     enabled: !!token
   });
 
-  if (isLoading) return <div className="p-8">Carregando...</div>;
+  if (isLoading){
+    return(
+     <div className="p-8 flex flex-col items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
+      <img src="https://i.postimg.cc/FsymPshK/loading.png" alt="icone de caregando" className={isLoading ? "animate-spin" : ""}/>
+      <p>Carregando...</p></div>
+    )};
   
   if (error) {
     if (error.response?.status === 403 || error.response?.status === 401) {
@@ -37,13 +42,13 @@ function Home() {
   }
 
     return (
-        <div className="flex flex-col justify-items-center">
+        <div className="flex flex-col justify-items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
             <div className="flex justify-evenly">
                 <div className=""><p>Total de Heróis Recrutados</p></div>
                 <div className=""><p>Média de Poder da Equipe</p></div>
                 <div className=""><p>Guilda Mais Forte</p></div>
             </div>
-            <div className="flex justify-around pt-5">
+            <div className="grid grid-cols-5 gap-5 p-5">
                 {data?.map((heroi) => (
                     <Cards key={heroi.id_heroi} heroi={heroi} />
                 ))}

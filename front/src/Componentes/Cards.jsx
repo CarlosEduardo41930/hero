@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 function Cards({ heroi }) {
   const statusColors = {
     online: "bg-green-500",
@@ -6,7 +7,10 @@ function Cards({ heroi }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 w-48">
+    <Link to={`/heroi/${heroi.id_heroi}`}>
+      
+
+<div className="bg-gray-300 rounded-lg shadow-md p-4 w-48">
       <img
         src={heroi.imagem}
         alt={heroi.nome}
@@ -25,6 +29,8 @@ function Cards({ heroi }) {
         className={`inline-block w-3 h-3 rounded-full ${statusColors[heroi.status]}`}
       ></span>
     </div>
+      </Link>    
   );
 }
 export default Cards;
+

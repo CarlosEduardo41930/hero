@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
     const user = rows[0];
     const lerSenha = await bcrypt.compare(senha, user.senha);
     if (lerSenha) {
-      const token = jwt.sign({ usuario: user.nome_usuario, id: user.id_usuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ usuario: user.nome_usuario, id: user.id_usuario }, process.env.JWT_SECRET, { expiresIn: '5h' });
       const dados = {id_usuario: user.id_usuario, nome_usuario: user.nome_usuario};
       return res.status(200).json({message: 'Login realizado com sucesso!', token,  dados});
     } else {
@@ -74,10 +74,43 @@ exports.cadastro = async (req, res) => {
 exports.herois = async (req, res) => {
   try{
         const [rows] = await db.query("SELECT * FROM heroi WHERE fk_usuario = ?", [req.userId]);
-        res.json(rows);
+        const heroisComRank = rows.map(h => {
+      const nivelHeroi = parseInt(h.nivel);
+      const rank = heroi.find(r => nivelHeroi >= r.nivel_min && nivelHeroi <= r.nivel_max) || {};
+      return {
+        ...h,
+          nome_rank: rank.nome_rank,
+          cor: rank.cor,
+          titulos: rank.titulos,
+          pontos_xps: rank.pontos_xps
+        
+      };
+    });
+    
+    res.json(heroisComRank);
     }catch (error) {
         res.status(500).json({erro: error.message});
     }
+}
+exports.heroi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await db.query("SELECT * FROM heroi WHERE id_heroi = ?", [id]);
+        const heroisComRank = rows.map(h => {
+      const nivelHeroi = parseInt(h.nivel);
+      const rank = heroi.find(r => nivelHeroi >= r.nivel_min && nivelHeroi <= r.nivel_max) || {};
+      return {
+        ...h,
+          nome_rank: rank.nome_rank,
+          cor: rank.cor,
+          titulos: rank.titulos,
+          pontos_xps: rank.pontos_xps
+        
+      };
+    });
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
 }
 
 // exports.novoHeroi = async (req, res) => {
