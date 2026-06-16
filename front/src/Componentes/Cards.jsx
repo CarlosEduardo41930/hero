@@ -4,6 +4,7 @@ function Cards({ heroi }) {
     online: "bg-green-500",
     ausente: "bg-yellow-500",
     offline: "bg-gray-500",
+    off: "bg-gray-500",
   };
 
   return (
@@ -19,14 +20,14 @@ function Cards({ heroi }) {
       <h3 className="font-bold text-lg">{heroi.nome}</h3>
       <p className="text-gray-600">{heroi.classe}</p>
       <p className="text-sm text-gray-500">{heroi.nivel}</p>
-      <p className="text-xs text-gray-400">{heroi.xp}</p>
+      <p className="text-xs text-gray-400">{heroi.xp ?? heroi.pontos_xps}</p>
       <p className="text-xs text-gray-400">{heroi.status}</p>
-      <p className="text-xs text-gray-400">{heroi.titulos}</p>
-      <p className="text-xs" style={{ color: heroi.cor }}>
-        {heroi.nome_rank}
+      <p className="text-xs text-gray-400">{heroi.titulos || 'Sem título'}</p>
+      <p className="text-xs" style={{ color: heroi.cor || '#9CA3AF' }}>
+        {heroi.nome_rank || 'Sem rank'}
       </p>
       <span
-        className={`inline-block w-3 h-3 rounded-full ${statusColors[heroi.status]}`}
+        className={`inline-block w-3 h-3 rounded-full ${statusColors[heroi.status] || 'bg-gray-500'}`}
       ></span>
     </div>
       </Link>    

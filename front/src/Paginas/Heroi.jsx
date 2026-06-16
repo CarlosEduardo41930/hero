@@ -25,7 +25,7 @@ function Heroi() {
 
   if (isLoading){
     return(
-     <div className="p-8 flex flex-col items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
+     <div className="p-8 flex flex-col items-center">
       <img src="https://i.postimg.cc/FsymPshK/loading.png" alt="icone de caregando" className={isLoading ? "animate-spin" : ""}/>
       <p>Carregando...</p></div>
     )};
@@ -36,25 +36,39 @@ function Heroi() {
       navigate('/acesso-negado');
       return null;
     }
-    return( <div className="flex flex-col justify-items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
+    return( <div className="flex flex-col justify-items-center">
         <p className="p-8 text-red-500">Erro ao carregar heróis: {error.message}</p>
         </div>);
   }
-    return (<div className="">
-        <Link to="/teste">
+    return (<div className="p-5 ">
+      <Link to="/teste">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Voltar
             </button>
         </Link>
-        <div className="">
+      <div className="flex flex-col items-center p-3">
+        
+        <div className="border-4 border-indigo-500">
             <img src={data.imagem} alt={data.nome} />
         </div>
-        <div className="">
+        <div className="text-cyan-50 flex flex-col justify-items-center">
             <h1 className="text-2xl font-bold">{data.nome}</h1>
-            <p>{data.classe}</p>
+            <div className="flex justify-items-center gap-5">
+              <div className="">
+                <p>{data.classe}</p>
             <p>Nível: {data.nivel}</p>
-            <p>XP: /{data.xp}</p>
+            <p>Status: {data.status}</p>
+            <p>XP: {data.xps}/{data.pontos_xps}</p>
+              </div>
+              <div className="">
+                <p>Rank: {data.nome_rank}</p>
+                <p>Ouro: {data.ouro}</p>
+            <p>Nível: {data.nivel}</p>
+            <p>Titulo: {data.titulos}</p>
+              </div>
+            </div>
         </div>
+    </div>
     </div>
     )
 }

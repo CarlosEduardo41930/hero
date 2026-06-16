@@ -37,7 +37,7 @@ CREATE TABLE heroi (
     status VARCHAR(50),
     ouro INT DEFAULT 0,
     expose VARCHAR(10),
-    xsp INT DEFAULT 0,
+    xps INT DEFAULT 0,
     descricao TEXT,
     ordem INT,
 

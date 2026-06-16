@@ -42,8 +42,8 @@ function Home() {
   }
 
     return (
-        <div className="flex flex-col justify-items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
-            <div className="flex justify-evenly">
+        <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-slate-900 to-purple-900">
+            <div className="flex justify-around w-full p-5 text-cyan-50">
                 <div className=""><p>Total de Heróis Recrutados</p></div>
                 <div className=""><p>Média de Poder da Equipe</p></div>
                 <div className=""><p>Guilda Mais Forte</p></div>
