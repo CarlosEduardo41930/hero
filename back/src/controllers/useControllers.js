@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
       const dados = { id_usuario: user.id_usuario, nome_usuario: user.nome_usuario };
       return res.status(200).json({ message: 'Login realizado com sucesso!', token, dados });
     } else {
-      return res.status(401).json({ message: 'Senha incorreta!' });
+      return res.status(400).json({ message: 'Senha incorreta!' });
     }
 
   } catch (error) {

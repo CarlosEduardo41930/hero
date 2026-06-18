@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
-import axios from 'axios';
+import {apiCadastrar} from '../api/apisRotas';
 import { z } from 'zod';
 
 function Cadastro() {
@@ -25,12 +25,10 @@ function Cadastro() {
     });
 
     const mutation = useMutation({
-        mutationFn: (dados) => {
-            return axios.post('http://localhost:418/cadastro', dados);
-        }, onSuccess: (dado) => {
+        mutationFn:apiCadastrar,
+        onSuccess: (dado) => {
             console.log('Cadastro bem-sucedido:', dado.data);
             navigate('/login');
-            console.log('Token armazenado:', dado.data);
         }, onError: (error) => {
             const data = error.response?.data;
             console.log('Erro no cadastro:', data);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
-import axios from 'axios';
+import {apiLogin} from "../api/apisRotas"
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -9,9 +9,8 @@ function Login() {
     const navigate = useNavigate();
 
     const mutation = useMutation({
-        mutationFn: (dados) => {
-            return axios.post('http://localhost:418/login', dados);
-        }, onSuccess: (dado) => {
+        mutationFn: apiLogin,
+        onSuccess: (dado) => {
             localStorage.setItem('token', dado.data.token);
             navigate('/teste');
         }

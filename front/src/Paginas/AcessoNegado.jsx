@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+
+
 function AcessoNegado() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-purple-900">
@@ -6,6 +9,7 @@ function AcessoNegado() {
                 <p className="text-lg text-white mt-4">
                     Você não tem permissão para acessar esta página.
                 </p>
+                <Link to={`/login`}>Voltar para login</Link>
             </div>
         </div>
     );

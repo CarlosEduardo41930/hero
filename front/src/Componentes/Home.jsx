@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import {apiMostrarHerois} from "../api/apisRotas"
 import Cards from "./Cards";
 
 function Home() {
@@ -16,13 +16,8 @@ function Home() {
   
   const {data, isLoading, error} = useQuery({
     queryKey: ['herois'],
-    queryFn: async () => {
-        const res = await axios.get('http://localhost:418/herois', {
-            headers: { authorization: `Bearer ${token}` }
-        });
-        return res.data;
-    },
-    enabled: !!token
+    queryFn: apiMostrarHerois,
+    enabled: !!token //<---- !!!!! NUNCA MECHER SE NÂO FUNCIONA !!!!!!!
   });
 
   if (isLoading){
@@ -38,7 +33,7 @@ function Home() {
       navigate('/acesso-negado');
       return null;
     }
-    return <div className="p-8 text-red-500">Erro ao carregar heróis: {error.message}</div>;
+    return <div className="p-8 text-red-500"><p>Erro ao carregar heróis: {error.message}</p></div>;
   }
 
     return (
