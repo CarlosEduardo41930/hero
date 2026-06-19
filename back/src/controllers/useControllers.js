@@ -73,6 +73,9 @@ exports.cadastro = async (req, res) => {
 exports.herois = async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM heroi WHERE fk_usuario = ?", [req.userId]);
+    if (!rows || rows.length === 0){
+      return res.status(204).json({message: 'vazio'});
+    }
     const heroisComRank = rows.map(h => {
       const nivelHeroi = parseInt(h.nivel);
       const rank = heroi.find(r => nivelHeroi >= r.nivel_min && nivelHeroi <= r.nivel_max) || {};

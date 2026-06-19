@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const urlApi = import.meta.env.VITE_LINK_BASE_API || "http://localhost:418"
+
 const api = axios.create({
-  baseURL: "http://localhost:418",
+  baseURL: urlApi,
 });
 
 api.interceptors.request.use(

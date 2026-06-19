@@ -1,0 +1,540 @@
+diff --git a/back/src/controllers/useControllers.js b/back/src/controllers/useControllers.js
+index 6553997..3375cdf 100644
+--- a/back/src/controllers/useControllers.js
++++ b/back/src/controllers/useControllers.js
+@@ -73,6 +73,9 @@ exports.cadastro = async (req, res) => {
+ exports.herois = async (req, res) => {
+   try {
+     const [rows] = await db.query("SELECT * FROM heroi WHERE fk_usuario = ?", [req.userId]);
++    if (!rows || rows.length === 0){
++      return res.status(204).json({message: 'vazio'});
++    }
+     const heroisComRank = rows.map(h => {
+       const nivelHeroi = parseInt(h.nivel);
+       const rank = heroi.find(r => nivelHeroi >= r.nivel_min && nivelHeroi <= r.nivel_max) || {};
+diff --git a/front/package-lock.json b/front/package-lock.json
+index c386797..637af19 100644
+--- a/front/package-lock.json
++++ b/front/package-lock.json
+@@ -12,6 +12,7 @@
+         "@tailwindcss/vite": "^4.3.0",
+         "@tanstack/react-query": "^5.101.0",
+         "axios": "^1.17.0",
++        "dotenv": "^17.4.2",
+         "postcss": "^8.5.15",
+         "react": "^19.2.6",
+         "react-dom": "^19.2.6",
+@@ -73,7 +74,6 @@
+       "integrity": "sha512-RgHBCvtjbOK2gXSNBNIkNoEc9qoVEtau3hj8gEqKQuL3HZAibKarWFEI3Lfm6EYKkLalOh8eSrj9b+ch9H/VBA==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/code-frame": "^7.29.7",
+         "@babel/generator": "^7.29.7",
+@@ -283,6 +283,27 @@
+         "node": ">=6.9.0"
+       }
+     },
++    "node_modules/@emnapi/core": {
++      "version": "1.11.1",
++      "resolved": "https://registry.npmjs.org/@emnapi/core/-/core-1.11.1.tgz",
++      "integrity": "sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "@emnapi/wasi-threads": "1.2.2",
++        "tslib": "^2.4.0"
++      }
++    },
++    "node_modules/@emnapi/runtime": {
++      "version": "1.11.1",
++      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.1.tgz",
++      "integrity": "sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
+     "node_modules/@emnapi/wasi-threads": {
+       "version": "1.2.2",
+       "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.2.tgz",
+@@ -1171,7 +1192,6 @@
+       "integrity": "sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "csstype": "^3.2.2"
+       }
+@@ -1218,7 +1238,6 @@
+       "integrity": "sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "acorn": "bin/acorn"
+       },
+@@ -1339,7 +1358,6 @@
+         }
+       ],
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "baseline-browser-mapping": "^2.10.12",
+         "caniuse-lite": "^1.0.30001782",
+@@ -1484,6 +1502,18 @@
+         "node": ">=8"
+       }
+     },
++    "node_modules/dotenv": {
++      "version": "17.4.2",
++      "resolved": "https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz",
++      "integrity": "sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==",
++      "license": "BSD-2-Clause",
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://dotenvx.com"
++      }
++    },
+     "node_modules/dunder-proto": {
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz",
+@@ -1592,7 +1622,6 @@
+       "integrity": "sha512-AyIKhnOBuOAdueD7RB3xB+YeAWScb9jHsJBgH2Hcde8InP5JYhqrRR6iTMHyTEwgENK54Cp44e4v8BwNhsuHuw==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@eslint-community/eslint-utils": "^4.8.0",
+         "@eslint-community/regexpp": "^4.12.2",
+@@ -2666,7 +2695,6 @@
+       "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.4.tgz",
+       "integrity": "sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==",
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=12"
+       },
+@@ -2736,7 +2764,6 @@
+       "resolved": "https://registry.npmjs.org/react/-/react-19.2.7.tgz",
+       "integrity": "sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==",
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=0.10.0"
+       }
+@@ -2746,7 +2773,6 @@
+       "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.7.tgz",
+       "integrity": "sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "scheduler": "^0.27.0"
+       },
+@@ -2980,7 +3006,6 @@
+       "resolved": "https://registry.npmjs.org/vite/-/vite-8.0.16.tgz",
+       "integrity": "sha512-h9bXPmJichP5fLmVQo3PyaGSDE2n3aPuomeAlVRm0JLmt4rY6zmPKd59HYI4LNW8oTK7tlTsuC7l/m7awx9Jcw==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "lightningcss": "^1.32.0",
+         "picomatch": "^4.0.4",
+@@ -3105,7 +3130,6 @@
+       "integrity": "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "funding": {
+         "url": "https://github.com/sponsors/colinhacks"
+       }
+diff --git a/front/package.json b/front/package.json
+index 2909445..9606f6b 100644
+--- a/front/package.json
++++ b/front/package.json
+@@ -14,6 +14,7 @@
+     "@tailwindcss/vite": "^4.3.0",
+     "@tanstack/react-query": "^5.101.0",
+     "axios": "^1.17.0",
++    "dotenv": "^17.4.2",
+     "postcss": "^8.5.15",
+     "react": "^19.2.6",
+     "react-dom": "^19.2.6",
+diff --git a/front/src/App.jsx b/front/src/App.jsx
+index e974917..7aad4ef 100644
+--- a/front/src/App.jsx
++++ b/front/src/App.jsx
+@@ -1,12 +1,17 @@
+ //import { useState } from 'react'
+ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+ import { Routes, Route } from 'react-router-dom'
++// PARA O Layout
++import Heroi from './Componentes/Heroi'
++import CriarHeroi from './Componentes/CriarHeroi'
++import Perfil from './Paginas/Perfil'
++import Home from './Componentes/Home'
++
++
++// PARA O PAGINA
+ import Login from './Paginas/Login'
+ import Cadastro from './Paginas/Cadastro'
+ import Layout from './Paginas/Layout'
+-import Heroi from './Paginas/Heroi'
+-import CriarHeroi from './Paginas/CriarHeroi'
+-import Perfil from './Paginas/Perfil'
+ import AcessoNegado from './Paginas/AcessoNegado'
+ 
+ 
+@@ -18,13 +23,19 @@ function App() {
+   return (
+     <QueryClientProvider client={queryClient}>
+       <Routes>
++        <Route element={<Layout />}>
++        <Route path='/teste' element={<Home />} />
++        <Route path='/heroi/:id' element={<Heroi />} />
++        <Route path='/' element={<CriarHeroi/>} />
++        <Route path='/perfil' element={<Perfil  />} />
++        </Route>
+         <Route path='/teste' element={<Layout />} />
+         <Route path='/cadastro' element={<Cadastro />} />
+         <Route path='/login' element={<Login />} />
+         <Route path='/acesso-negado' element={<AcessoNegado />} />
+-        <Route path='/heroi/:id' element={<Heroi />} />
+-        <Route path='/' element={<CriarHeroi/>} />
+-        <Route path='/perfil' element={<Perfil />} />
++        
++        
++        
+       </Routes>
+     </QueryClientProvider>
+   )
+diff --git a/front/src/Componentes/Cards.jsx b/front/src/Componentes/Cards.jsx
+index eb68c30..e0e68aa 100644
+--- a/front/src/Componentes/Cards.jsx
++++ b/front/src/Componentes/Cards.jsx
+@@ -3,8 +3,7 @@ function Cards({ heroi }) {
+   const statusColors = {
+     online: "bg-green-500",
+     ausente: "bg-yellow-500",
+-    offline: "bg-gray-500",
+-    off: "bg-gray-500",
++    offline: "bg-gray-500"
+   };
+ 
+   return (
+@@ -18,14 +17,17 @@ function Cards({ heroi }) {
+         className="w-full h-32 object-cover rounded-md mb-2"
+       />
+       <h3 className="font-bold text-lg">{heroi.nome}</h3>
++      <p className="text-xs text-[20px]" style={{ color: heroi.cor}}>
++        {heroi.nome_rank || 'Sem rank'}
++      </p>
+       <p className="text-gray-600">{heroi.classe}</p>
+       <p className="text-sm text-gray-500">{heroi.nivel}</p>
+       <p className="text-xs text-gray-400">{heroi.xp ?? heroi.pontos_xps}</p>
+-      <p className="text-xs text-gray-400">{heroi.status}</p>
++      <p className={`px-3 py-1 text-xs rounded-full font-semibold text-white ${
++            statusColors[heroi.status] || "bg-gray-500"
++          }`}>{heroi.status}</p>
+       <p className="text-xs text-gray-400">{heroi.titulos || 'Sem título'}</p>
+-      <p className="text-xs" style={{ color: heroi.cor || '#9CA3AF' }}>
+-        {heroi.nome_rank || 'Sem rank'}
+-      </p>
++      
+       <span
+         className={`inline-block w-3 h-3 rounded-full ${statusColors[heroi.status] || 'bg-gray-500'}`}
+       ></span>
+diff --git a/front/src/Componentes/Home.jsx b/front/src/Componentes/Home.jsx
+index 073b8a3..122e419 100644
+--- a/front/src/Componentes/Home.jsx
++++ b/front/src/Componentes/Home.jsx
+@@ -1,32 +1,33 @@
+ import { useQuery } from '@tanstack/react-query';
+ import { useEffect } from "react";
+ import { useNavigate } from "react-router-dom";
+-import {apiMostrarHerois} from "../api/apisRotas"
++import { apiMostrarHerois } from "../api/apisRotas"
+ import Cards from "./Cards";
+ 
+ function Home() {
+   const navigate = useNavigate();
+   const token = localStorage.getItem('token');
+-  
++
+   useEffect(() => {
+     if (!token) {
+       navigate('/acesso-negado');
+     }
+   }, [token, navigate]);
+-  
+-  const {data, isLoading, error} = useQuery({
++
++  const { data, isLoading, error } = useQuery({
+     queryKey: ['herois'],
+     queryFn: apiMostrarHerois,
+     enabled: !!token //<---- !!!!! NUNCA MECHER SE NÂO FUNCIONA !!!!!!!
+   });
+ 
+-  if (isLoading){
+-    return(
+-     <div className="p-8 flex flex-col items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
+-      <img src="https://i.postimg.cc/FsymPshK/loading.png" alt="icone de caregando" className={isLoading ? "animate-spin" : ""}/>
+-      <p>Carregando...</p></div>
+-    )};
+-  
++  if (isLoading) {
++    return (
++      <div className="p-8 flex flex-col items-center bg-gradient-to-br from-slate-900 to-purple-900 h-[93%]">
++        <img src="https://i.postimg.cc/FsymPshK/loading.png" alt="icone de caregando" className={isLoading ? "animate-spin" : ""} />
++        <p>Carregando...</p></div>
++    )
++  };
++
+   if (error) {
+     if (error.response?.status === 403 || error.response?.status === 401) {
+       localStorage.removeItem('token');
+@@ -36,20 +37,33 @@ function Home() {
+     return <div className="p-8 text-red-500"><p>Erro ao carregar heróis: {error.message}</p></div>;
+   }
+ 
+-    return (
+-        <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-slate-900 to-purple-900">
+-            <div className="flex justify-around w-full p-5 text-cyan-50">
+-                <div className=""><p>Total de Heróis Recrutados</p></div>
+-                <div className=""><p>Média de Poder da Equipe</p></div>
+-                <div className=""><p>Guilda Mais Forte</p></div>
+-            </div>
+-            <div className="grid grid-cols-5 gap-5 p-5">
+-                {data?.map((heroi) => (
+-                    <Cards key={heroi.id_heroi} heroi={heroi} />
+-                ))}
+-            </div>
+-        </div>
+-    );
++  return (
++    <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-slate-900 to-purple-900">
++      <div className="flex justify-around w-full p-5 text-cyan-50">
++        <div className=""><p>Total de Heróis Recrutados</p></div>
++        <div className=""><p>Média de Poder da Equipe</p></div>
++        <div className=""><p>Guilda Mais Forte</p></div>
++      </div>
++      <div className="grid grid-cols-5 gap-5 p-5">
++        {data?.status === 204 ? (
++          <div className="flex flex-col items-center justify-center min-h-[60vh] col-span-5 ">
++            <img
++              src="https://i.postimg.cc/yxP0VYNk/heroi.png"
++              alt="imagem de heroi genérica"
++              className="w-156 h-156 opacity-70"
++            />
++            <p className="mt-4 text-gray-400 text-xl font-semibold">
++              Sem herói
++            </p>
++          </div>
++        ) : (
++          data?.data.map((heroi) => (
++            <Cards key={heroi.id_heroi} heroi={heroi} />
++          ))
++        )}
++      </div>
++    </div>
++  );
+ }
+ 
+ export default Home
+\ No newline at end of file
+diff --git a/front/src/Paginas/CriarHeroi.jsx b/front/src/Paginas/CriarHeroi.jsx
+deleted file mode 100644
+index 68edff5..0000000
+--- a/front/src/Paginas/CriarHeroi.jsx
++++ /dev/null
+@@ -1,54 +0,0 @@
+-// import { z } from 'zod';
+-// import { useState } from "react";
+-
+-                //         Array.map((key,valor) => {
+-                //         <option value="key">Escolha um ${valor}</option>
+-                // }})
+-
+-function CriarHeroi () {
+-
+-    const handleSubmit = (e) => {
+-        e.preventDefault();
+-    }
+-
+-    return(
+-        <div>
+-            
+-            
+-            <form onSubmit={handleSubmit} >
+-                <h1>Criar Herói</h1>
+-                <div>
+-                    <label >Nome do Heroi: </label>
+-                    <label >Classe: </label>
+-                    <select>
+-
+-
+-                        <option value="">Escolha uma classe</option>
+-                        <option value="guerreiro">Guerreiro</option>
+-                        <option value="mago">Mago</option>
+-                        <option value="ladino">Ladino</option>
+-                        <option value="clérigo">Clérigo</option>
+-                        <option value="paladino">Paladino</option>
+-                        <option value="bárbaro">Bárbaro</option>
+-                        <option value="ranger">Ranger(Patrulheiro)</option>
+-                        <option value="bardo">Bardo</option>
+-                        <option value="feiticeiro">Feiticeiro</option>
+-                        <option value="monge">Monge</option>
+-                    </select>
+-                    <label>Imagem: </label>
+-                    <label>Nivel: </label>
+-                    <label>Status: </label>
+-                    <select>
+-                        <option value="">Escolha um status</option>
+-                        <option value="online">Online</option>
+-                        <option value="ausente">Ausente</option>
+-                        <option value="offline">Offline</option>
+-                    </select>
+-                    <label>Ouro: </label>
+-                    <label>XPS: </label>
+-                </div>
+-            </form>
+-        </div>
+-    )
+-}
+-export default CriarHeroi
+\ No newline at end of file
+diff --git a/front/src/Paginas/Heroi.jsx b/front/src/Paginas/Heroi.jsx
+deleted file mode 100644
+index 521f623..0000000
+--- a/front/src/Paginas/Heroi.jsx
++++ /dev/null
+@@ -1,76 +0,0 @@
+-import { useParams,useNavigate, Link } from 'react-router-dom'
+-import { useQuery } from '@tanstack/react-query';
+-import axios from 'axios';
+-import { useEffect } from 'react';
+-
+-
+-function Heroi() {
+-    const navigate = useNavigate();
+-    const { id } = useParams();
+-    const token = localStorage.getItem('token');
+-    useEffect(() => {
+-    if (!token) {
+-      navigate('/acesso-negado');
+-    }
+-  }, [token, navigate]);
+-
+-    const { data, isLoading, error } = useQuery({
+-    queryKey: ['personagem', id],
+-    queryFn: async () => {
+-      const res = await axios.get(`http://localhost:418/heroi/${id}`, {headers: { authorization: `Bearer ${token}` }})
+-      return res.data
+-    },
+-    enabled: !!token
+-  });
+-
+-  if (isLoading){
+-    return(
+-     <div className="p-8 flex flex-col items-center">
+-      <img src="https://i.postimg.cc/FsymPshK/loading.png" alt="icone de caregando" className={isLoading ? "animate-spin" : ""}/>
+-      <p>Carregando...</p></div>
+-    )};
+-  
+-  if (error) {
+-    if (error.response?.status === 403 || error.response?.status === 401) {
+-      localStorage.removeItem('token');
+-      navigate('/acesso-negado');
+-      return null;
+-    }
+-    return( <div className="flex flex-col justify-items-center">
+-        <p className="p-8 text-red-500">Erro ao carregar heróis: {error.message}</p>
+-        </div>);
+-  }
+-    return (<div className="p-5 ">
+-      <Link to="/teste">
+-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+-                Voltar
+-            </button>
+-        </Link>
+-      <div className="flex flex-col items-center p-3">
+-        
+-        <div className="border-4 border-indigo-500">
+-            <img src={data.imagem} alt={data.nome} />
+-        </div>
+-        <div className="text-cyan-50 flex flex-col justify-items-center">
+-            <h1 className="text-2xl font-bold">{data.nome}</h1>
+-            <div className="flex justify-items-center gap-5">
+-              <div className="">
+-                <p>{data.classe}</p>
+-            <p>Nível: {data.nivel}</p>
+-            <p>Status: {data.status}</p>
+-            <p>XP: {data.xps}/{data.pontos_xps}</p>
+-              </div>
+-              <div className="">
+-                <p>Rank: {data.nome_rank}</p>
+-                <p>Ouro: {data.ouro}</p>
+-            <p>Nível: {data.nivel}</p>
+-            <p>Titulo: {data.titulos}</p>
+-              </div>
+-            </div>
+-        </div>
+-    </div>
+-    </div>
+-    )
+-}
+-
+-export default Heroi;
+\ No newline at end of file
+diff --git a/front/src/Paginas/Layout.jsx b/front/src/Paginas/Layout.jsx
+index 7deed2b..d354912 100644
+--- a/front/src/Paginas/Layout.jsx
++++ b/front/src/Paginas/Layout.jsx
+@@ -1,11 +1,11 @@
+ import Nav from '../Componentes/Nav'
+-import Home from '../Componentes/Home'
++import { Outlet } from 'react-router-dom';
+ 
+ function Layout() {
+     return(
+-        <div className="min-h-screen bg-gray-100">
++        <div className="min-h-screen">
+         <Nav />
+-        <Home />
++        <Outlet />
+         </div>
+     )
+ }
+diff --git a/front/src/api/apisRotas.js b/front/src/api/apisRotas.js
+index c38a9c9..6aefc3a 100644
+--- a/front/src/api/apisRotas.js
++++ b/front/src/api/apisRotas.js
+@@ -11,6 +11,9 @@ export async function apiCadastrar(dados) {
+ 
+ export async function apiMostrarHerois() {
+         const res = await Api.get('/herois',);
+-        return res.data;
++        return {
++          status: res.status,
++          data: res.data
++        };
+     }
+ 
+diff --git a/front/src/api/validacao.js b/front/src/api/validacao.js
+index 0205407..46f31a3 100644
+--- a/front/src/api/validacao.js
++++ b/front/src/api/validacao.js
+@@ -1,7 +1,9 @@
+ import axios from "axios";
+ 
++const urlApi = import.meta.env.VITE_LINK_BASE_API || "http://localhost:418"
++
+ const api = axios.create({
+-  baseURL: "http://localhost:418",
++  baseURL: urlApi,
+ });
+ 
+ api.interceptors.request.use(

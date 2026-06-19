@@ -11,6 +11,9 @@ export async function apiCadastrar(dados) {
 
 export async function apiMostrarHerois() {
         const res = await Api.get('/herois',);
-        return res.data;
+        return {
+          status: res.status,
+          data: res.data
+        };
     }
 

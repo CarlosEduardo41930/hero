@@ -1,11 +1,11 @@
 import Nav from '../Componentes/Nav'
-import Home from '../Componentes/Home'
+import { Outlet } from 'react-router-dom';
 
 function Layout() {
     return(
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen">
         <Nav />
-        <Home />
+        <Outlet />
         </div>
     )
 }
