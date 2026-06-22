@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiMostrarHerois } from "../api/apisRotas"
+import { useMemo } from "react";
 import Cards from "./Cards";
 
 function Home() {
   const navigate = useNavigate();
+  const [classeFiltro, setClasseFiltro] = useState('');
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -19,6 +21,17 @@ function Home() {
     queryFn: apiMostrarHerois,
     enabled: !!token //<---- !!!!! NUNCA MECHER SE NÂO FUNCIONA !!!!!!!
   });
+
+
+  const heroisFiltrados = useMemo(() => {
+  const lista = data?.data ?? [];
+
+  if (!classeFiltro) return lista;
+
+  return lista.filter(
+    (heroi) => heroi.classe === classeFiltro
+  );
+}, [data, classeFiltro]);
 
   if (isLoading) {
     return (
@@ -44,6 +57,25 @@ function Home() {
         <div className=""><p>Média de Poder da Equipe</p></div>
         <div className=""><p>Guilda Mais Forte</p></div>
       </div>
+      <div className="flex justify-center p-4">
+  <select
+    value={classeFiltro}
+    onChange={(e) => setClasseFiltro(e.target.value)}
+    className="p-2 rounded"
+  >
+    <option value="">Todas as classes</option>
+    <option value="guerreiro">Guerreiro</option>
+    <option value="mago">Mago</option>
+    <option value="ladino">Ladino</option>
+    <option value="clérigo">Clérigo</option>
+    <option value="paladino">Paladino</option>
+    <option value="bárbaro">Bárbaro</option>
+    <option value="ranger">Ranger</option>
+    <option value="bardo">Bardo</option>
+    <option value="feiticeiro">Feiticeiro</option>
+    <option value="monge">Monge</option>
+  </select>
+</div>
       <div className="grid grid-cols-5 gap-5 p-5">
         {data?.status === 204 ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] col-span-5 ">
@@ -57,7 +89,7 @@ function Home() {
             </p>
           </div>
         ) : (
-          data?.data.map((heroi) => (
+          heroisFiltrados.map((heroi) => (
             <Cards key={heroi.id_heroi} heroi={heroi} />
           ))
         )}

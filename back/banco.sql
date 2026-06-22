@@ -11,19 +11,25 @@ CREATE TABLE usuario (
 
 CREATE TABLE guilda (
     id_guilda INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
     pontos INT DEFAULT 0,
     ouro INT DEFAULT 0,
     expose VARCHAR(10),
     especializacao VARCHAR(100),
     ordem INT,
-    descricao TEXT
+    descricao TEXT,
+
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
 );
 
 CREATE TABLE titulo (
     id_titulo INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NOT NULL,
     tipo INT,
-    titulo VARCHAR(255)
+    titulo VARCHAR(255),
+
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
 );
 
 CREATE TABLE heroi (
@@ -69,6 +75,7 @@ CREATE TABLE user_guilda_titulo (
 
 CREATE TABLE missao (
     id_missao INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
     tipo VARCHAR(50),
     origem VARCHAR(100),
@@ -81,7 +88,9 @@ CREATE TABLE missao (
     nivel INT,
     pontos INT,
     descricao TEXT,
-    limite_participantes INT NOT NULL
+    limite_participantes INT NOT NULL,
+
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
 );
 
 CREATE TABLE heroi_missao (
@@ -102,4 +111,4 @@ CREATE TABLE heroi_missao (
 
 
 INSERT INTO `guilda` (`id_guilda`, `nome`, `pontos`, `ouro`, `expose`, `especializacao`, `ordem`, `descricao`) VALUES (NULL, 'teste', '50', '50', 'false', 'sfafsafsaf', '1', 'dasfgsd\\gsfdg');
-INSERT INTO `heroi` (`id_heroi`, `fk_usuario`, `fk_guilda`, `nome`, `classe`, `imagem`, `nivel`, `status`, `ouro`, `expose`, `descricao`, `ordem`) VALUES (NULL, '1', '1', 'teste', 'adfds', 'https://tse3.mm.bing.net/th/id/OIP.4cTSuV8rsq9gXsd0BTuSjgHaGM?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', '1', 'off', '50', 'false', 'sagsadgfsgf', '1');
+INSERT INTO heroi ( `fk_usuario`, `fk_guilda`, `nome`, `classe`, `imagem`, `nivel`, `status`, `ouro`, `expose`, `descricao`, `ordem`) VALUES ('1', '1', 'teste', 'adfds', 'https://tse3.mm.bing.net/th/id/OIP.4cTSuV8rsq9gXsd0BTuSjgHaGM?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', '1', 'off', '50', 'false', 'sagsadgfsgf', '1');

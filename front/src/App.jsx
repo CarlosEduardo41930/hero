@@ -6,6 +6,10 @@ import Heroi from './Componentes/Heroi'
 import CriarHeroi from './Componentes/CriarHeroi'
 import Perfil from './Paginas/Perfil'
 import Home from './Componentes/Home'
+import CriarGuildas from './Componentes/CriarGuildas'
+import Guildas from './Componentes/Guildas'
+import Missoes from './Componentes/Missoes'
+import CriarMissoes from './Componentes/CriarMissoes'
 
 
 // PARA O PAGINA
@@ -26,8 +30,12 @@ function App() {
         <Route element={<Layout />}>
         <Route path='/teste' element={<Home />} />
         <Route path='/heroi/:id' element={<Heroi />} />
-        <Route path='/' element={<CriarHeroi/>} />
+        <Route path='/heroi/novo' element={<CriarHeroi/>} />
         <Route path='/perfil' element={<Perfil  />} />
+        <Route path='/guildas/novo' element={<CriarGuildas  />} />
+        <Route path='/guildas' element={<Guildas />} />
+        <Route path='/missoes' element={<Missoes />} />
+        <Route path='/missoes/novo' element={<CriarMissoes />} />
         </Route>
         <Route path='/teste' element={<Layout />} />
         <Route path='/cadastro' element={<Cadastro />} />

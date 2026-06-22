@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
-import {apiCadastrar} from '../api/apisRotas';
+import { apiCadastrar } from '../api/apisRotas';
 import { z } from 'zod';
 
 function Cadastro() {
@@ -25,10 +25,11 @@ function Cadastro() {
     });
 
     const mutation = useMutation({
-        mutationFn:apiCadastrar,
+        mutationFn: apiCadastrar,
         onSuccess: (dado) => {
             console.log('Cadastro bem-sucedido:', dado.data);
-            navigate('/login');
+            localStorage.setItem('token', dado.data.token);
+            navigate('/teste');
         }, onError: (error) => {
             const data = error.response?.data;
             console.log('Erro no cadastro:', data);
@@ -43,18 +44,17 @@ function Cadastro() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setErro([]);
+
         const dadosValidos = validacaoCadastro.safeParse({ nome_completo, nome_usuario, email, senha: password, confirmPassword });
         if (dadosValidos.success) {
             mutation.mutate(dadosValidos.data);
         } else {
             console.error('Dados de cadastro inválidos:', dadosValidos.error.flatten());
             setErro((antes) => [
-                ...antes,
-                ...(dadosValidos.error.flatten().fieldErrors.confirmPassword || []),
-                ...(dadosValidos.error.flatten().fieldErrors.email || []),
-                ...(dadosValidos.error.flatten().fieldErrors.senha || []),
-                ...(dadosValidos.error.flatten().fieldErrors.nome_completo || []),
-                ...(dadosValidos.error.flatten().fieldErrors.nome_usuario || [])
+                ...new Set([
+                    ...antes,
+                    ...Object.values(dadosValidos.error.flatten().fieldErrors).flat()
+                ])
             ]);
             console.log(dadosValidos.error.flatten().fieldErrors.confirmPassword);
         }

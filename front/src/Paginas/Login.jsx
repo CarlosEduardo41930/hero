@@ -12,6 +12,7 @@ function Login() {
         mutationFn: apiLogin,
         onSuccess: (dado) => {
             localStorage.setItem('token', dado.data.token);
+            localStorage.setItem('usuario',dado.data.dados);
             navigate('/teste');
         }
     })
