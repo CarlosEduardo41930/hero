@@ -73,8 +73,9 @@ exports.herois = async (req, res) => {
 
       };
     });
+    const paraUsuario = await sql.dadosParaUsuario(req.user.id);
 
-    res.json(heroisComRank);
+    res.json({herois: heroisComRank, use: paraUsuario});
   } catch (error) {
     res.status(500).json({ erro: error.message });
   }
@@ -304,6 +305,52 @@ exports.missoes = async (req, res) => {
   }
 };
 
+exports.excluirHeroi = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const heroi = await sql.heroi(id);
+
+    if (!heroi || heroi.length === 0) {
+      return res.status(404).json({
+        message: 'Herói não encontrado'
+      });
+    }
+
+    await sql.excluirHeroi(id);
+
+    return res.status(200).json({
+      message: 'Herói removido com sucesso'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      erro: error.message
+    });
+  }
+};
+
+exports.fecharMissao = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const resultado = await sql.fecharMissao(id, req.user.id);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Missão não encontrada ou não pertence ao usuário"
+      });
+    }
+
+    return res.json({
+      message: "Missão finalizada com sucesso"
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      erro: error.message
+    });
+  }
+};
 
 module.exports = exports;

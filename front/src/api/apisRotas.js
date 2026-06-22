@@ -17,6 +17,15 @@ export async function apiMostrarHerois() {
   };
 }
 
+export async function heroi(id) {
+  const res = await Api.get(`/heroi/${id}`);
+  return {
+    status: res.status,
+    data: res.data
+  };
+  
+}
+
 export async function apiAdicionarHeroi(dados) {
   const res = await Api.post('/herois/adicionar', dados);
   return {
@@ -78,6 +87,23 @@ export async function apiMissoes() {
 }
 export async function apiCriarMissao (data) {
   const res = await Api.post("http://localhost:418/missao/adicionar", data);
+  return {
+    status: res.status,
+    data: res.data
+  };
+}
+
+export async function apiExcluirHeroi(id) {
+  const res = await Api.delete(`/heroi/${id}`);
+
+  return {
+    status: res.status,
+    data: res.data
+  };
+}
+
+export async function apiFecharMissao(id) {
+  const res = await Api.put(`/missao/fechar/${id}`);
   return {
     status: res.status,
     data: res.data

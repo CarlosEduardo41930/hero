@@ -24,7 +24,8 @@ function Home() {
 
 
   const heroisFiltrados = useMemo(() => {
-  const lista = data?.data ?? [];
+  const lista = data?.data.herois ?? [];
+  
 
   if (!classeFiltro) return lista;
 
@@ -49,13 +50,13 @@ function Home() {
     }
     return <div className="p-8 text-red-500"><p>Erro ao carregar heróis: {error.message}</p></div>;
   }
-
+const dado = data?.data.use;
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-slate-900 to-purple-900">
       <div className="flex justify-around w-full p-5 text-cyan-50">
-        <div className=""><p>Total de Heróis Recrutados</p></div>
-        <div className=""><p>Média de Poder da Equipe</p></div>
-        <div className=""><p>Guilda Mais Forte</p></div>
+        <div className=""><p>Total de Heróis Recrutados: {dado.total_herois}</p></div>
+        <div className=""><p>Média de Poder da Equipe: {dado.media_poder}</p></div>
+        <div className=""><p>Guilda Mais Forte: {dado.guilda_mais_forte}</p></div>
       </div>
       <div className="flex justify-center p-4">
   <select

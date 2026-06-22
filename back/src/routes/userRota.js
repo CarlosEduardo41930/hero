@@ -15,5 +15,8 @@ router.post('/guilda/adicionar',token.verificaToken, userController.novaGuilda)
 router.get('/guilda',token.verificaToken, userController.guildas)
 router.post('/missao/adicionar',token.verificaToken, userController.novaMissao)
 router.get('/missao',token.verificaToken, userController.missoes)
+router.delete('/heroi/:id', token.verificaToken, userController.excluirHeroi);
+router.put('/missao/fechar/:id', token.verificaToken, userController.fecharMissao);
+
 
 module.exports = router;

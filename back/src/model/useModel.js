@@ -97,13 +97,56 @@ exports.novaMissao = async ( nome, tipo, origem, local_missao, objetivo, recomen
 };
 
 exports.missoes = async (fk_usuario) => {
-  const [rows] = await db.query(`SELECT * FROM missao WHERE fk_usuario = ?`,
+  const [rows] = await db.query(
+    `SELECT * 
+     FROM missao 
+     WHERE fk_usuario = ? 
+     AND expose = 'true'`,
     [fk_usuario]
   );
+
   return rows;
 };
 
+exports.excluirHeroi = async (id) => {
+  const [result] = await db.query(
+    'DELETE FROM heroi WHERE id_heroi = ?',
+    [id]
+  );
 
+  return result;
+};
+
+exports.dadosParaUsuario = async (fk_usuario) => {
+  const [rows] = await db.query(`
+    SELECT 
+      (SELECT COUNT(*) FROM heroi WHERE fk_usuario = u.id_usuario) AS total_herois,
+      (SELECT AVG(nivel) FROM heroi WHERE fk_usuario = u.id_usuario) AS media_poder,
+      (SELECT nome FROM guilda WHERE fk_usuario = u.id_usuario ORDER BY pontos DESC LIMIT 1) AS guilda_mais_forte
+    FROM usuario u
+    WHERE u.id_usuario = ?
+  `, [fk_usuario]);
+
+  const data = rows[0];
+
+  return {
+    total_herois: data.total_herois ?? 0,
+    media_poder: data.media_poder ? Number(data.media_poder) : 0,
+    guilda_mais_forte: data.guilda_mais_forte ?? "Nenhuma guilda"
+  };
+};
+
+
+exports.fecharMissao = async (missaoId, usuarioId) => {
+  const [resultado] = await db.query(
+    `UPDATE missao 
+     SET expose = 'false'
+     WHERE id_missao = ? AND fk_usuario = ?`,
+    [missaoId, usuarioId]
+  );
+
+  return resultado;
+};
 
 
 

@@ -73,7 +73,7 @@ function Guildas() {
                 {data?.status === 204 || guildas.length === 0 ? (
                     <div className="flex flex-col items-center justify-center min-h-[60vh] col-span-4">
                         <img
-                            src="https://i.postimg.cc/5NwXWbZT/guilda.png"
+                            src="https://i.postimg.cc/yxP0VYNk/heroi.png"
                             alt="guilda"
                             className="w-64 opacity-70"
                         />
