@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
-import {apiLogin} from "../api/apisRotas"
+import { apiLogin } from "../api/apisRotas"
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,8 +13,8 @@ function Login() {
         mutationFn: apiLogin,
         onSuccess: (dado) => {
             localStorage.setItem('token', dado.data.token);
-            localStorage.setItem('usuario',dado.data.dados);
-            navigate('/teste');
+            localStorage.setItem('usuario', dado.data.dados);
+            navigate('/');
         }
     })
     const handleSubmit = (e) => {
@@ -47,18 +48,28 @@ function Login() {
                         required
                     />
                 </div>
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     disabled={mutation.isPending}
                     className="w-full rounded-lg bg-purple-600 py-2 font-semibold text-white transition hover:bg-purple-700 disabled:opacity-50"
                 >
                     {mutation.isPending ? 'Entrando...' : 'Login'}
                 </button>
-                {mutation.error && (
-                    <p className="mt-4 text-center text-red-400 text-sm">
-                        Erro no login: {mutation.error?.response?.data?.message || 'Tente novamente'}
-                    </p>
-                )}
+                <AnimatePresence>
+                    {mutation.error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            className="mt-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg"
+                        >
+                            <p className="text-center text-red-300 text-sm">
+                                {mutation.error?.response?.data?.message || 'Tente novamente'}
+                            </p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 <p className="text-center text-sm text-white pt-4">
                     Não é cadastrado? <Link to="/cadastro" className="text-purple-400 hover:text-purple-300">Crie uma conta aqui</Link>
                 </p>

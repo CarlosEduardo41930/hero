@@ -10,6 +10,7 @@ import CriarGuildas from './Componentes/CriarGuildas'
 import Guildas from './Componentes/Guildas'
 import Missoes from './Componentes/Missoes'
 import CriarMissoes from './Componentes/CriarMissoes'
+import HeroiMissoes from './Componentes/HeroiMissoes'
 
 
 // PARA O PAGINA
@@ -28,8 +29,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Routes>
         <Route element={<Layout />}>
-        <Route path='/teste' element={<Home />} />
+        <Route path='/' element={<Home />} />
         <Route path='/heroi/:id' element={<Heroi />} />
+        <Route path='/heroi/:id/missoes' element={<HeroiMissoes />} />
         <Route path='/heroi/novo' element={<CriarHeroi/>} />
         <Route path='/perfil' element={<Perfil  />} />
         <Route path='/guildas/novo' element={<CriarGuildas  />} />
@@ -37,7 +39,7 @@ function App() {
         <Route path='/missoes' element={<Missoes />} />
         <Route path='/missoes/novo' element={<CriarMissoes />} />
         </Route>
-        <Route path='/teste' element={<Layout />} />
+        <Route path='/' element={<Layout />} />
         <Route path='/cadastro' element={<Cadastro />} />
         <Route path='/login' element={<Login />} />
         <Route path='/acesso-negado' element={<AcessoNegado />} />

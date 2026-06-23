@@ -1,53 +1,43 @@
+import { motion } from "framer-motion";
+
 function CardGuilda({ guilda }) {
   return (
-    <div className="bg-gray-300 rounded-lg shadow-md p-4 w-72 hover:shadow-xl transition">
-      
-      <h2 className="font-bold text-xl text-center mb-2">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.03, y: -4 }}
+      className="bg-white/10 backdrop-blur-md rounded-xl border border-white/10 p-5 w-72 hover:border-purple-400/40 transition-colors shadow-lg"
+    >
+      <h2 className="font-bold text-xl text-white text-center mb-1">
         {guilda.nome}
       </h2>
 
-      <p
-        className="font-semibold text-center text-lg"
-        style={{ color: guilda.cor }}
-      >
+      <p className="font-semibold text-center text-base" style={{ color: guilda.cor }}>
         {guilda.nome_rank || "Sem Rank"}
       </p>
 
-      <div className="mt-3 space-y-1 text-sm">
-        <p>
-          <strong>ID:</strong> {guilda.id_guilda}
-        </p>
-
-        <p>
-          <strong>Pontos:</strong> {guilda.pontos}
-        </p>
-
-        <p>
-          <strong>Ouro:</strong> {guilda.ouro}
-        </p>
-
-        <p>
-          <strong>Exposição:</strong> {guilda.expose}
-        </p>
-
-        <p>
-          <strong>Especialização:</strong>{" "}
-          {guilda.especializacao || "Não definida"}
-        </p>
-
-        <p>
-          <strong>Ordem:</strong> {guilda.ordem}
-        </p>
-
+      <div className="mt-3 space-y-1.5 text-sm">
+        <div className="flex justify-between">
+          <span className="text-gray-400">Pontos</span>
+          <span className="text-white font-medium">{guilda.pontos}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-400">Ouro</span>
+          <span className="text-yellow-400 font-medium">{guilda.ouro}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-400">Especialização</span>
+          <span className="text-white font-medium">{guilda.especializacao || "Não definida"}</span>
+        </div>
       </div>
 
-      <div className="mt-4 border-t pt-3">
-        <p className="font-semibold">Descrição:</p>
-        <p className="text-sm text-gray-700 break-words">
-          {guilda.descricao || "Sem descrição"}
-        </p>
-      </div>
-    </div>
+      {guilda.descricao && (
+        <div className="mt-3 pt-3 border-t border-white/10">
+          <p className="text-gray-400 text-xs">{guilda.descricao}</p>
+        </div>
+      )}
+    </motion.div>
   );
 }
 

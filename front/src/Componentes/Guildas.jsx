@@ -9,9 +9,7 @@ function Guildas() {
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        if (!token) {
-            navigate("/acesso-negado");
-        }
+        if (!token) navigate("/acesso-negado");
     }, [token, navigate]);
 
     const { data, isLoading, error } = useQuery({
@@ -22,82 +20,57 @@ function Guildas() {
 
     if (isLoading) {
         return (
-            <div className="p-8 flex flex-col items-center bg-gradient-to-br from-slate-900 to-purple-900 h-screen">
-                <img
-                    src="https://i.postimg.cc/FsymPshK/loading.png"
-                    alt="loading"
-                    className="animate-spin"
-                />
-                <p>Carregando...</p>
+            <div className="min-h-[calc(100vh-72px)] flex flex-col items-center justify-center">
+                <img src="https://i.postimg.cc/FsymPshK/loading.png" alt="loading" className="animate-spin" />
+                <p className="text-white mt-2">Carregando...</p>
             </div>
         );
     }
 
     if (error) {
-        console.log(error);
-        console.log(error.response?.data);
-        if ( error.response?.status === 401 || error.response?.status === 403
-        ) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
             localStorage.removeItem("token");
             navigate("/acesso-negado");
             return null;
         }
-
         return (
-            <div className="text-red-500 p-8">
-                
-                <p>Erro ao carregar guildas.</p>
+            <div className="min-h-[calc(100vh-72px)] flex items-center justify-center">
+                <p className="text-red-400">Erro ao carregar guildas.</p>
             </div>
         );
     }
 
-    const guildas = data?.data ?? [];
+    const guildas = Array.isArray(data?.data) ? data.data : [];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-purple-900">
-
-            <div className="flex justify-between items-center p-6">
-                <h1 className="text-4xl text-white font-bold">
-                    Guildas
-                </h1>
-
+        <div className="min-h-[calc(100vh-72px)] p-6">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl text-white font-bold">Guildas</h1>
                 <button
                     onClick={() => navigate("/guildas/novo")}
-                    className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
+                    className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-lg transition hover:scale-[1.02] active:scale-[0.98]"
                 >
                     + Nova Guilda
                 </button>
             </div>
 
-            <div className="grid grid-cols-4 gap-5 p-5">
-                {data?.status === 204 || guildas.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center min-h-[60vh] col-span-4">
-                        <img
-                            src="https://i.postimg.cc/yxP0VYNk/heroi.png"
-                            alt="guilda"
-                            className="w-64 opacity-70"
-                        />
-
-                        <p className="mt-4 text-gray-400 text-xl font-semibold">
-                            Nenhuma guilda cadastrada
-                        </p>
-
-                        <button
-                            onClick={() => navigate("/guildas/novo")}
-                            className="mt-5 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg"
-                        >
-                            Criar primeira guilda
-                        </button>
-                    </div>
-                ) : (
-                    guildas.map((guilda) => (
-                        <CardGuilda
-                            key={guilda.id_guilda}
-                            guilda={guilda}
-                        />
-                    ))
-                )}
-            </div>
+            {data?.status === 204 || guildas.length === 0 ? (
+                <div className="flex flex-col items-center justify-center min-h-[50vh]">
+                    <p className="text-gray-400 text-xl font-semibold">Nenhuma guilda cadastrada</p>
+                    <button
+                        onClick={() => navigate("/guildas/novo")}
+                        className="mt-4 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition"
+                    >
+                        Criar primeira guilda
+                    </button>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    {guildas.map((guilda) => (
+                        <CardGuilda key={guilda.id_guilda} guilda={guilda} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

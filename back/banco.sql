@@ -86,6 +86,7 @@ CREATE TABLE missao (
     expose VARCHAR(10),
     titulo VARCHAR(100),
     nivel INT,
+    ouro INT,
     pontos INT,
     descricao TEXT,
     limite_participantes INT NOT NULL,

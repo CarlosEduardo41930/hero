@@ -79,14 +79,14 @@ export async function apiMostrarGuildas() {
 }
 
 export async function apiMissoes() {
-  const res = await Api.get("http://localhost:418/missao");
+  const res = await Api.get("/missao");
   return {
     status: res.status,
     data: res.data
   };
 }
 export async function apiCriarMissao (data) {
-  const res = await Api.post("http://localhost:418/missao/adicionar", data);
+  const res = await Api.post("/missao/adicionar", data);
   return {
     status: res.status,
     data: res.data
@@ -104,6 +104,22 @@ export async function apiExcluirHeroi(id) {
 
 export async function apiFecharMissao(id) {
   const res = await Api.put(`/missao/fechar/${id}`);
+  return {
+    status: res.status,
+    data: res.data
+  };
+}
+
+export async function apiMissoesHeroi(id) {
+  const res = await Api.get(`/heroi/${id}/missoes`);
+  return {
+    status: res.status,
+    data: res.data
+  };
+}
+
+export async function apiCompletarMissao(heroiId, missaoId) {
+  const res = await Api.post(`/heroi/${heroiId}/completar-missao/${missaoId}`);
   return {
     status: res.status,
     data: res.data

@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
 import { apiCadastrar } from '../api/apisRotas';
 import { z } from 'zod';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Cadastro() {
     const [nome_completo, setNomeCompleto] = useState('');
@@ -29,7 +30,7 @@ function Cadastro() {
         onSuccess: (dado) => {
             console.log('Cadastro bem-sucedido:', dado.data);
             localStorage.setItem('token', dado.data.token);
-            navigate('/teste');
+            navigate('/');
         }, onError: (error) => {
             const data = error.response?.data;
             console.log('Erro no cadastro:', data);
@@ -126,15 +127,21 @@ function Cadastro() {
                 >
                     {mutation.isPending ? 'Cadastrando...' : 'Cadastrar'}
                 </button>
-                {erro.length > 0 && (
-                    <ul>
-                        {erro.map((msg, i) => (
-                            <li key={i} className="mt-4 text-center text-red-400 text-sm">
-                                {msg}
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <AnimatePresence>
+                    {erro.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            className="mt-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg"
+                        >
+                            {erro.map((msg, i) => (
+                                <p key={i} className="text-center text-red-300 text-sm">{msg}</p>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 <p className="text-center text-sm text-white pt-4">
                     Já é cadastrado? <Link to="/login" className="text-purple-400 hover:text-purple-300">Faça login aqui</Link>
                 </p>

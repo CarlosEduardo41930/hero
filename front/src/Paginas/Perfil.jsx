@@ -2,8 +2,9 @@ import { z } from 'zod';
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiBuscarPerfil, apiAtualizarPerfil } from "../api/apisRotas";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Perfil() {
     const [nome_completo, setNomeCompleto] = useState('');
@@ -96,14 +97,14 @@ function Perfil() {
     });
 
     useEffect(() => {
-    if (data?.data?.rows?.length > 0) {
-        const usuario = data.data.rows[0];
+        if (data?.data?.rows?.length > 0) {
+            const usuario = data.data.rows[0];
 
-        setEmail(usuario.email || '');
-        setNomeCompleto(usuario.nome || '');
-        setNomeUsuario(usuario.nome_usuario || '');
-    }
-}, [data]);
+            setEmail(usuario.email || '');
+            setNomeCompleto(usuario.nome || '');
+            setNomeUsuario(usuario.nome_usuario || '');
+        }
+    }, [data]);
 
     if (isLoading) {
         return (
@@ -120,16 +121,48 @@ function Perfil() {
 
     return (
         <div className="p-8 bg-gradient-to-br from-slate-900 to-purple-900 min-h-[93%] text-white flex flex-col items-center">
-            <h1 className="text-3xl font-bold mb-6">Perfil</h1>
+            <div className="flex justify-between items-center mb-6 w-full max-w-lg">
+                <h1 className="text-3xl font-bold">Perfil</h1>
+                <button
+                    onClick={() => {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('usuario');
+                        navigate('/login');
+                    }}
+                    className="bg-red-600/80 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition hover:scale-[1.02] active:scale-[0.98]"
+                >
+                    Logout
+                </button>
+            </div>
 
             <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white/10 p-6 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md">
 
-                {sucesso && <div className="mb-4 p-3 bg-green-500/30 border border-green-500 text-green-200 rounded-lg text-sm">{sucesso}</div>}
-                {erro.length > 0 && (
-                    <div className="mb-4 p-3 bg-red-500/30 border border-red-500 text-red-200 rounded-lg text-sm">
-                        {erro.map((err, i) => <p key={i}>• {err}</p>)}
-                    </div>
-                )}
+                <AnimatePresence>
+                    {sucesso && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            className="mb-4 p-3 bg-green-500/20 border border-green-500/40 text-green-300 rounded-lg text-sm"
+                        >
+                            {sucesso}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {erro.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            className="mb-4 p-3 bg-red-500/20 border border-red-500/40 text-red-300 rounded-lg text-sm"
+                        >
+                            {erro.map((err, i) => <p key={i}>• {err}</p>)}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 <div className="mb-6">
                     <h2 className="text-xl font-semibold mb-4 text-purple-300">Editar Informação:</h2>
