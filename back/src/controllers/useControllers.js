@@ -77,7 +77,8 @@ exports.cadastro = async (req, res) => {
     const senhaHash = await bcrypt.hash(senha, 10);
     const dados = await sql.cadastrarUsuario(email, senhaHash, nome_completo, nome_usuario);
     const token = jwt.sign({ usuario: nome_usuario, id: dados.insertId }, process.env.JWT_SECRET, { expiresIn: '5h' });
-    return res.status(200).json({ message: 'Cadastro realizado com sucesso!', token, nome_usuario });
+    const dado = nome_usuario
+    return res.status(200).json({ message: 'Cadastro realizado com sucesso!', token, dado });
   } catch (error) {
     console.error('Erro ao validar cadastro:', error);
     return res.status(500).json({ message: 'Erro interno do servidor' });
@@ -124,7 +125,7 @@ exports.heroi = async (req, res) => {
         xp: h.xps,
         nome_rank: rank.nome_rank,
         cor: rank.cor,
-        titulos: rank.titulos + (h.titulo ? `, ${h.titulo}` : ''),
+        titulos: rank.titulos + (h.titulos ? `, ${h.titulos}` : ''),
         pontos_xps: rank.pontos_xps
       };
     });
@@ -239,7 +240,7 @@ exports.guildas = async (req, res) => {
         ...g,
         nome_rank: rank.nome_rank,
         cor: rank.cor,
-        titulos: rank.titulos + (g.titulo ? `, ${g.titulo}` : ''),
+        titulos: rank.titulos + (g.titulos_guilda ? `, ${g.titulos_guilda}` : ''),
       };
     });
     res.json(guildasComRank);

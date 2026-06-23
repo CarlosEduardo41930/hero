@@ -20,7 +20,6 @@ exports.validacaoHeroi = z.object({
 exports.validacaoPerfil = z.object({
   nome_completo: z.coerce.string().min(2),
   nome_usuario: z.coerce.string().min(3),
-  imagem: z.string().url("Insira uma URL válida"),
   email: z.coerce.string().email(),
   atualSenha: z.coerce.string(),
   novaSenha: z.coerce.string()
